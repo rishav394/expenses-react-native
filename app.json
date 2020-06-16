@@ -15,7 +15,12 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "bundleIdentifier": "com.rishav.hisab",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "com.rishav.hisab",
+      "versionCode": 1
     }
   }
 }

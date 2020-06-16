@@ -1,55 +1,44 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
+  RefreshControl,
+  Alert
 } from "react-native";
 import { Routes } from "../../constants";
 import { images } from "../../res";
-import { ISingleUser, IUserState, PropsWithNavigation } from "../../types/all";
+import { IUserState, PropsWithNavigation } from "../../types/all";
 
 type Props = PropsWithNavigation<{}>;
 
 const HomeScreen: React.FC<Props> = (props: Props) => {
   const [users, setUsers] = useState<IUserState[]>();
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [refreshing, setRefreshing] = useState<boolean>(false);
+
+  const fetchUsers = () => {
+    return new Promise<IUserState[]>((resolve, reject) => {
+      axios
+        .get<IUserState[]>("http://192.168.1.104:3000/")
+        .then(res => {
+          resolve(res.data);
+        })
+        .catch(err => reject(err));
+    });
+  };
 
   useEffect(() => {
-    setUsers([
-      {
-        name: "Rishav",
-        records: [
-          {
-            amount: 340,
-            comment: "on"
-          }
-        ]
-      },
-      {
-        name: "jatin",
-        records: []
-      },
-      {
-        name: "adit",
-        records: [
-          {
-            amount: 340.11,
-            comment: "on"
-          },
-          {
-            amount: -1010.9,
-            comment: "on"
-          },
-          {
-            amount: 340,
-            comment: "on"
-          }
-        ]
-      }
-    ]);
+    fetchUsers()
+      .then(res => setUsers(res))
+      .catch(() => {
+        Alert.alert("Something went wrong!");
+      });
   }, []);
 
   useEffect(() => {
@@ -60,33 +49,40 @@ const HomeScreen: React.FC<Props> = (props: Props) => {
     }
   }, [users]);
 
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchUsers()
+      .then(res => {
+        setUsers(res);
+        setRefreshing(false);
+      })
+      .catch(() => {
+        setRefreshing(false);
+        Alert.alert("Unable to refresh");
+      });
+  };
+
   if (isLoading) {
-    return (
-      <ActivityIndicator
-        size="large"
-        style={{
-          marginTop: "auto",
-          marginBottom: "auto"
-        }}
-      />
-    );
+    return <ActivityIndicator size="large" style={styles.verticallyCenter} />;
   }
 
   return (
-    <View>
+    <ScrollView
+      refreshControl={
+        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      }
+    >
       {users?.map(user => {
-        const amount = Math.round(
-          user.records.reduce((a, b) => a + b.amount, 0)
-        );
+        const amount = user.records
+          .reduce((a, b) => a + b.amount, 0)
+          .toFixed(2);
 
         return (
           <TouchableOpacity
             onPress={() => {
               props.navigation.navigate(Routes.DETAILS, {
-                user: {
-                  name: user.name
-                }
-              } as ISingleUser);
+                user
+              });
             }}
             key={user.name}
             style={styles.item}
@@ -95,11 +91,7 @@ const HomeScreen: React.FC<Props> = (props: Props) => {
               <View style={styles.imagNode}>
                 <Image style={styles.avatar} source={images.avatar} />
                 <View style={styles.text}>
-                  <Text
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={styles.name}
-                  >
+                  <Text numberOfLines={1} style={styles.name}>
                     {user.name}
                   </Text>
                   <Text numberOfLines={1} style={styles.amount}>
@@ -119,7 +111,7 @@ const HomeScreen: React.FC<Props> = (props: Props) => {
           </TouchableOpacity>
         );
       })}
-    </View>
+    </ScrollView>
   );
 };
 
@@ -161,6 +153,10 @@ const styles = StyleSheet.create({
   arrow: {
     height: 20,
     width: 20,
+    marginTop: "auto",
+    marginBottom: "auto"
+  },
+  verticallyCenter: {
     marginTop: "auto",
     marginBottom: "auto"
   }
