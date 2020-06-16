@@ -11,7 +11,7 @@ import {
   RefreshControl,
   Alert
 } from "react-native";
-import { Routes } from "../../constants";
+import { Routes, backendURL } from "../../constants";
 import { images } from "../../res";
 import { IUserState, PropsWithNavigation } from "../../types/all";
 
@@ -25,7 +25,7 @@ const HomeScreen: React.FC<Props> = (props: Props) => {
   const fetchUsers = () => {
     return new Promise<IUserState[]>((resolve, reject) => {
       axios
-        .get<IUserState[]>("http://192.168.1.104:3000/")
+        .get<IUserState[]>(backendURL)
         .then(res => {
           resolve(res.data);
         })
@@ -36,13 +36,13 @@ const HomeScreen: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     fetchUsers()
       .then(res => setUsers(res))
-      .catch(() => {
-        Alert.alert("Something went wrong!");
+      .catch(err => {
+        Alert.alert("Something went wrong!", err.message);
       });
   }, []);
 
   useEffect(() => {
-    if (users?.length === 0) {
+    if (!users || users.length === 0) {
       setIsLoading(true);
     } else {
       setIsLoading(false);

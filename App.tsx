@@ -1,8 +1,8 @@
 import { createAppContainer } from "react-navigation";
 import { createStackNavigator } from "react-navigation-stack";
-import DetailsScreen from "./components/details";
-import HomeScreen from "./components/home";
-import { Routes } from "./constants";
+import DetailsScreen from "./src/components/details";
+import HomeScreen from "./src/components/home";
+import { Routes } from "./src/constants";
 
 const RootStack = createStackNavigator(
   {

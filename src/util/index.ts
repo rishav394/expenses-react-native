@@ -9,3 +9,7 @@ export const uuid = () => {
     return v.toString(16);
   });
 };
+
+export const isDevelopment = () => {
+  return process.env.NODE_ENV === "development";
+};
