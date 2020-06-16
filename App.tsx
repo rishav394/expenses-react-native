@@ -1,19 +1,157 @@
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { Image, Text, TouchableOpacity, View, StyleSheet } from "react-native";
+import { createAppContainer } from "react-navigation";
+import { createStackNavigator } from "react-navigation-stack";
+import DetailsScreen from "./components/details";
+import { images } from "./res";
+import { IUserState, PropsWithNavigation, ISingleUser } from "./types/all";
+import { Routes } from "./constants";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-    </View>
-  );
+type State = {
+  users?: IUserState[];
+};
+
+type Props = PropsWithNavigation<{}>;
+
+class HomeScreen extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {};
+  }
+
+  componentDidMount() {
+    this.setState({
+      users: [
+        {
+          name: "rishabrishabrishabrishabrishabrishabrishabrishab",
+          records: [
+            {
+              amount: 340,
+              comment: "on"
+            }
+          ]
+        },
+        {
+          name: "jatin",
+          records: []
+        },
+        {
+          name: "adit",
+          records: [
+            {
+              amount: 340.11,
+              comment: "on"
+            },
+            {
+              amount: -1010.9,
+              comment: "on"
+            },
+            {
+              amount: 340,
+              comment: "on"
+            }
+          ]
+        }
+      ]
+    });
+  }
+
+  render() {
+    return (
+      <View>
+        {this.state.users?.map(user => {
+          const amount = Math.round(
+            user.records.reduce((a, b) => a + b.amount, 0)
+          );
+
+          return (
+            <TouchableOpacity
+              onPress={() => {
+                this.props.navigation.navigate(Routes.DETAILS, {
+                  user: {
+                    name: user.name
+                  }
+                } as ISingleUser);
+              }}
+              key={user.name}
+              style={styles.item}
+            >
+              <View style={styles.container}>
+                <View style={styles.imagNode}>
+                  <Image style={styles.avatar} source={images.avatar} />
+                  <View style={styles.text}>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      style={styles.name}
+                    >
+                      {user.name}
+                    </Text>
+                    <Text numberOfLines={1} style={styles.amount}>
+                      {`$ ${amount}`}
+                    </Text>
+                  </View>
+                </View>
+                <View>
+                  <Image source={images.right_arrow} style={styles.arrow} />
+                </View>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </View>
+    );
+  }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const RootStack = createStackNavigator({
+  [Routes.HOME]: {
+    screen: HomeScreen,
+    navigationOptions: {
+      title: "Users"
+    }
   },
+  [Routes.DETAILS]: {
+    screen: DetailsScreen
+  }
+});
+
+export default createAppContainer(RootStack);
+
+const styles = StyleSheet.create({
+  item: {
+    padding: 20
+  },
+  container: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  imagNode: {
+    display: "flex",
+    flexDirection: "row",
+    flex: 1
+  },
+  avatar: {
+    height: 35,
+    width: 35,
+    marginRight: 10
+  },
+  text: {
+    display: "flex",
+    flexDirection: "column",
+    flex: 1,
+    justifyContent: "center"
+  },
+  name: {
+    textTransform: "capitalize"
+  },
+  amount: {
+    color: "grey"
+  },
+  arrow: {
+    height: 20,
+    width: 20,
+    margin: "auto"
+  }
 });
