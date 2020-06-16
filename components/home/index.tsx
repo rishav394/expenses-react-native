@@ -20,7 +20,7 @@ const HomeScreen: React.FC<Props> = (props: Props) => {
   useEffect(() => {
     setUsers([
       {
-        name: "rishabrishabrishabrishabrishabrishabrishabrishab",
+        name: "Rishav",
         records: [
           {
             amount: 340,
@@ -108,7 +108,12 @@ const HomeScreen: React.FC<Props> = (props: Props) => {
                 </View>
               </View>
               <View>
-                <Image source={images.right_arrow} style={styles.arrow} />
+                <Image
+                  source={images.right_arrow}
+                  height={20}
+                  width={20}
+                  style={styles.arrow}
+                />
               </View>
             </View>
           </TouchableOpacity>
@@ -135,8 +140,8 @@ const styles = StyleSheet.create({
     flex: 1
   },
   avatar: {
-    height: 45,
-    width: 45,
+    height: 50,
+    width: 50,
     marginRight: 10,
     marginTop: "auto",
     marginBottom: "auto"

@@ -1,15 +1,14 @@
 {
   "expo": {
-    "name": "ExpensesGoogleSheet-basic",
-    "slug": "ExpensesGoogleSheet-basic",
+    "name": "Google Sheet Hisab",
+    "slug": "Hisab",
     "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
       "image": "./assets/splash.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#fff"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
