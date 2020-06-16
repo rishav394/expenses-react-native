@@ -4,16 +4,29 @@ import DetailsScreen from "./components/details";
 import HomeScreen from "./components/home";
 import { Routes } from "./constants";
 
-const RootStack = createStackNavigator({
-  [Routes.HOME]: {
-    screen: HomeScreen,
-    navigationOptions: {
-      title: "Users"
+const RootStack = createStackNavigator(
+  {
+    [Routes.HOME]: {
+      screen: HomeScreen,
+      navigationOptions: {
+        title: "Users"
+      }
+    },
+    [Routes.DETAILS]: {
+      screen: DetailsScreen
     }
   },
-  [Routes.DETAILS]: {
-    screen: DetailsScreen
+  {
+    defaultNavigationOptions: {
+      headerStyle: {
+        backgroundColor: "green"
+      },
+      headerTintColor: "#fff",
+      headerTitleStyle: {
+        fontWeight: "bold"
+      }
+    }
   }
-});
+);
 
 export default createAppContainer(RootStack);

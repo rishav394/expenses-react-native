@@ -2,6 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import { NavigationStackOptions } from "react-navigation-stack";
 import { ISingleUser, PropsWithNavigation } from "../../types/all";
+import { capitalize } from "../../util";
 
 type Props = PropsWithNavigation<ISingleUser>;
 
@@ -10,24 +11,7 @@ class DetailsScreen extends React.Component<Props> {
     navigation
   }: Props): NavigationStackOptions => {
     return {
-      headerTitle: () => {
-        return (
-          <View
-            style={{
-              maxWidth: "90%"
-            }}
-          >
-            <Text
-              numberOfLines={1}
-              style={{
-                textTransform: "capitalize"
-              }}
-            >
-              {navigation.getParam("user").name}
-            </Text>
-          </View>
-        );
-      }
+      title: capitalize(navigation.getParam("user").name)
     };
   };
 
